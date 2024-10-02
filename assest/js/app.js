@@ -56,10 +56,16 @@ function displayForecast(data) {
         const { main: { temp_max }, weather, dt_txt } = forecastList[i];
         const [{ icon, description }] = weather;
 
-        // Correctly display date based on user's timezone
+        // Convert dt_txt (UTC) to a local Date object
         const date = new Date(dt_txt);
+        
+        // Format the date for display (weekdays and numeric date)
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
-        const formattedDate = date.toLocaleDateString(undefined, options); // Adjust locale if necessary
+        const formattedDate = date.toLocaleDateString(undefined, options); // Locale-aware formatting
+
+        const dayOfMonth = date.getDate();  // Day number (1-31)
+        const monthName = date.toLocaleString(undefined, { month: 'short' });  // Month abbreviation (Jan, Feb)
+        const dayName = date.toLocaleString(undefined, { weekday: 'long' });  // Full weekday name (Monday, etc.)
 
         const li = document.createElement("li");
         li.classList.add("card-item");
@@ -70,7 +76,8 @@ function displayForecast(data) {
                     <p class="title-2">${parseInt(temp_max)}&deg;</p>
                 </span>
             </div>
-            <p class="label-1">${formattedDate}</p>
+            <p class="label-1">${dayOfMonth} ${monthName}</p>
+            <p class="label-1">${dayName}</p>
         `;
         forecastSection.querySelector("[data-forecast-list]").appendChild(li);
     }
